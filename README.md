@@ -6,7 +6,7 @@ A responsive, accessible, and interactive **Admin Dashboard** for managing users
 
 ## 📸 Preview
 
-![Dashboard Preview](./src/assets/preview.png)
+![Dashboard Preview](./preview.png)
 
 ---
 
@@ -24,13 +24,13 @@ A responsive, accessible, and interactive **Admin Dashboard** for managing users
 
 ## 🛠️ Tech Stack
 
-| Tool              | Purpose                         |
-|------------------|---------------------------------|
-| React            | UI rendering                    |
-| Tailwind CSS     | Utility-first CSS styling       |
-| Chart.js         | Data visualization              |
-| React Icons      | Icon support                    |
-| Vite             | Development & build tooling     |
+| Tool         | Purpose                     |
+| ------------ | --------------------------- |
+| React        | UI rendering                |
+| Tailwind CSS | Utility-first CSS styling   |
+| Chart.js     | Data visualization          |
+| React Icons  | Icon support                |
+| Vite         | Development & build tooling |
 
 ---
 
@@ -52,3 +52,4 @@ A responsive, accessible, and interactive **Admin Dashboard** for managing users
 ├── tailwind.config.js          # Tailwind CSS config
 ├── package.json                # Project dependencies
 └── README.md                   # This file
+```
