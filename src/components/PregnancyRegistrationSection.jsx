@@ -1,186 +1,277 @@
-import { FiAlertTriangle } from "react-icons/fi";
-import { MdErrorOutline } from "react-icons/md";
-import { BiMessageRoundedError } from "react-icons/bi";
-import { Line, Doughnut } from "react-chartjs-2";
+
+import { useState } from "react";
+
 import {
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
   PointElement,
   LineElement,
-  Filler,
+  Title,
   Tooltip,
-  ArcElement,
   Legend,
+  Filler,
+  ArcElement,
 } from "chart.js";
+import { Line} from "react-chartjs-2";
 
 ChartJS.register(
   CategoryScale,
   LinearScale,
   PointElement,
   LineElement,
-  Filler,
+  Title,
   Tooltip,
-  ArcElement,
-  Legend
+  Legend,
+  Filler,
+  ArcElement
 );
 
-const PregnancyRegistrationSection = () => {
-  // Area Chart Config
-  const lineData = {
+const ChartsSection = () => {
+  const [conditionsPage, setConditionsPage] = useState(1);
+  
+
+  // Chart.js configuration for line chart
+  const lineChartData = {
     labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
     datasets: [
       {
-        label: "New Registrations",
-        data: [80, 180, 140, 240, 200, 80, 190],
+        label: "High Risk Mothers",
+        data: [100, 200, 150, 250, 200, 100, 200],
+        borderColor: "#14b8a6",
+        backgroundColor: "rgba(20, 184, 166, 0.1)",
+        borderWidth: 3,
         fill: true,
-        backgroundColor: "#e1fbfb",
-        borderColor: "#0D9394",
         tension: 0.4,
+        pointBackgroundColor: "#14b8a6",
+        pointBorderColor: "#14b8a6",
+        pointRadius: 4,
+        pointHoverRadius: 6,
       },
     ],
   };
 
-  const lineOptions = {
-    responsive: true,
-    plugins: { legend: { display: false } },
-    scales: {
-      y: { beginAtZero: true },
-    },
-  };
-
-  const donutData = {
-    labels: ["High", "Medium", "Low"],
-    datasets: [
-      {
-        data: [300, 300, 900],
-        backgroundColor: ["#ec475c", "#f87748", "#49af89"],
-        borderWidth: 0,
-      },
-    ],
-  };
-
-  const donutOptions = {
-    cutout: "70%",
+  const lineChartOptions = {
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
-      legend: { display: false },
+      legend: {
+        display: false,
+      },
+      tooltip: {
+        backgroundColor: "rgba(0, 0, 0, 0.8)",
+        titleColor: "#fff",
+        bodyColor: "#fff",
+        borderColor: "#14b8a6",
+        borderWidth: 1,
+      },
+    },
+    scales: {
+      x: {
+        grid: {
+          display: true,
+          color: "#f0f0f0",
+        },
+        border: {
+          display: false,
+        },
+        ticks: {
+          color: "#666",
+          font: {
+            size: 12,
+          },
+        },
+      },
+      y: {
+        grid: {
+          display: true,
+          color: "#f0f0f0",
+        },
+        border: {
+          display: false,
+        },
+        ticks: {
+          color: "#666",
+          font: {
+            size: 12,
+          },
+        },
+      },
     },
   };
 
+  // Chart.js configuration for pie chart
+ 
+
+
+  // All conditions data organized by pages
+  const allConditionsData = {
+    1: [
+      { condition: "Severe Anemia", count: 122 },
+      { condition: "(PIH) / Pre-eclampsia", count: 109 },
+      { condition: "Gestational Diabetes Mellitus (GDM)", count: 98 },
+      { condition: "HIV/Syphilis/Hepatitis B", count: 71 },
+    ],
+    2: [
+      { condition: "Hypothyroidism", count: 65 },
+      { condition: "Previous obstetric history", count: 61 },
+      { condition: "Age-based Risk", count: 56 },
+      { condition: "Multiple pregnancy", count: 55 },
+    ],
+    3: [
+      { condition: "Abnormal fetal presentation", count: 49 },
+      { condition: "History of previous C-section", count: 45 },
+      { condition: "Malnutrition", count: 39 },
+      { condition: "Sickle Cell", count: 35 },
+    ],
+    4: [
+      { condition: "Malaria/Dengue", count: 35 },
+      { condition: "Edeme", count: 26 },
+      { condition: "VDLR", count: 22 },
+      { condition: "OGTT", count: 19 },
+    ],
+    5: [{ condition: "Negative Blood Group", count: 17 }],
+  };
+
+  
+
+ 
+
+  const Pagination = ({ currentPage, totalPages, onPageChange }) => {
+    return (
+      <div className="flex items-center justify-center space-x-1 mt-4">
+        {[...Array(totalPages)].map((_, index) => (
+          <button
+            key={index + 1}
+            onClick={() => onPageChange(index + 1)}
+            className={`w-8 h-8 rounded-lg text-sm font-medium transition-colors ${
+              currentPage === index + 1
+                ? "bg-teal-500 text-white"
+                : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+            }`}
+          >
+            {index + 1}
+          </button>
+        ))}
+      </div>
+    );
+  };
+
+  // Get current page data
+  const currentConditionsData = allConditionsData[conditionsPage] || [];
+
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-      <div className="bg-white p-4 rounded-lg shadow col-span-2 flex flex-col lg:flex-row hover:scale-105 transition-transform duration-200">
-        {/* Left: Area Chart */}
-        <div className="flex-1 pr-4">
-          <h3 className="font-semibold mb-4">New Pregnancy Registration</h3>
-          <Line data={lineData} options={lineOptions} />
+    <div className="space-y-6">
+      {/* First Row - Combined Chart and Report + Conditions */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Combined High Risk Mothers Chart and Report */}
+        <div className="lg:col-span-2 bg-white rounded-lg p-6 shadow-sm border border-gray-200">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 h-full">
+            {/* Left Side - Chart */}
+            <div className="space-y-4">
+              <div>
+                <h3 className="text-lg font-semibold text-gray-800 mb-1">
+                  High Risk Mothers Identified
+                </h3>
+                <p className="text-sm text-gray-600 mb-4">
+                  Yearly Report Overview
+                </p>
+              </div>
+
+              <div className="h-48">
+                <Line data={lineChartData} options={lineChartOptions} />
+              </div>
+            </div>
+
+            {/* Vertical Separator */}
+            <div className="w-px bg-gray-300 mx-4 hidden lg:block absolute"></div>
+
+            {/* Right Side - Report */}
+            <div className="space-y-4 lg:pl-6">
+              <div>
+                <h3 className="text-lg font-semibold text-gray-800 mb-1">
+                  Report
+                </h3>
+                <p className="text-sm text-gray-600 mb-4">Monthly Avg. 150</p>
+              </div>
+
+              <div className="space-y-6">
+                <div>
+                  <p className="text-sm text-gray-600 mb-1">
+                    Total High Risk Mothers
+                  </p>
+                  <p className="text-3xl font-bold text-gray-900">1245</p>
+                </div>
+
+                <div>
+                  <p className="text-sm text-gray-600 mb-1">
+                    Newly Identified Today
+                  </p>
+                  <div className="flex items-center space-x-2">
+                    <p className="text-2xl font-semibold text-gray-900">25</p>
+                    <span className="text-sm text-green-600 font-medium">
+                      ▲ + 15
+                    </span>
+                  </div>
+                </div>
+
+                <div>
+                  <p className="text-sm text-gray-600 mb-1">
+                    New Identified This Week
+                  </p>
+                  <div className="flex items-center space-x-2">
+                    <p className="text-2xl font-semibold text-gray-900">156</p>
+                    <span className="text-sm text-green-600 font-medium">
+                      ▲ + 50
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
-        {/* Vertical Divider */}
-        <div className="w-px bg-gray-300 mx-4 hidden lg:block"></div>
+        {/* High Risk Pregnancy Conditions */}
+        <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-200">
+          <h3 className="text-lg font-semibold text-gray-800 mb-4">
+            High Risk Pregnancy Conditions
+          </h3>
 
-        {/* Right: Report Stats */}
-        <div className="w-full lg:w-60 pt-6 lg:pt-0 space-y-4">
-          <h3 className="font-semibold">Report</h3>
-          <p className="text-gray-400 text-sm">Monthly Avg: 150</p>
-          <div>
-            <h4 className="text-gray-500 text-sm">Total Registrations</h4>
-            <div className="text-2xl font-semibold">1000</div>
-          </div>
-          <div>
-            <h4 className="text-gray-500 text-sm">New Registrations Today</h4>
-            <div className="flex items-baseline space-x-10">
-              <div className="text-2xl font-semibold">25</div>
-              <div className="text-green-500 text-sm">▲ + 15</div>
+          <div className="space-y-4">
+            <div className="grid grid-cols-2 gap-4 text-sm font-medium text-gray-600 pb-2 border-b border-gray-200">
+              <span>CONDITION</span>
+              <span className="text-right">COUNT</span>
             </div>
-          </div>
-          <div>
-            <h4 className="text-gray-500 text-sm">
-              New Registrations This Week
-            </h4>
-            <div className="flex items-baseline space-x-10">
-              <div className="text-2xl font-semibold">156</div>
-              <div className="text-green-500 text-sm">▲ + 50</div>
+
+            <div className="min-h-[200px]">
+              {currentConditionsData.map((item, index) => (
+                <div
+                  key={index}
+                  className="grid grid-cols-2 gap-4 py-3 border-b border-gray-100 last:border-b-0"
+                >
+                  <span className="text-sm text-gray-700">
+                    {item.condition}
+                  </span>
+                  <span className="text-sm font-semibold text-gray-900 text-right">
+                    {item.count}
+                  </span>
+                </div>
+              ))}
             </div>
+
+            <Pagination
+              currentPage={conditionsPage}
+              totalPages={5}
+              onPageChange={setConditionsPage}
+            />
           </div>
         </div>
       </div>
 
-      {/* SOS Donut Chart */}
-      <div className="bg-white p-6 rounded-xl shadow-md flex flex-col space-y-6 hover:scale-105 transition-transform duration-200">
-        {/* Header */}
-        <div className="flex flex-col md:flex-row justify-between gap-4">
-          {/* Text block */}
-          <div>
-            <h3 className="text-lg font-semibold text-gray-800">
-              SOS Statistics
-            </h3>
-            <p className="text-gray-400 text-sm">Overall SOS Overview</p>
-            <div className="mt-4">
-              <div className="text-3xl font-semibold text-gray-900">1500</div>
-              <p className="text-sm text-gray-500">Total SOS</p>
-            </div>
-          </div>
-
-          {/* Chart block */}
-          <div className="w-full md:w-40 mx-auto md:mx-0 aspect-square">
-            <Doughnut data={donutData} options={donutOptions} />
-          </div>
-        </div>
-        <div className="space-y-4">
-          {/* High Priority */}
-          <div className="flex items-start justify-between flex-wrap">
-            <div className="flex items-start space-x-3">
-              <div className="bg-red-100 text-red-500 p-2 rounded-md">
-                <FiAlertTriangle className="w-5 h-5" />
-              </div>
-              <div>
-                <h4 className="font-semibold text-gray-800">High Priority</h4>
-                <p className="text-gray-500 text-sm">
-                  Immediate doctor alert, emergency action
-                </p>
-              </div>
-            </div>
-            <div className="text-gray-800 font-medium mt-2 md:mt-0">300</div>
-          </div>
-
-          {/* Medium Priority */}
-          <div className="flex items-start justify-between flex-wrap">
-            <div className="flex items-start space-x-3">
-              <div className="bg-orange-100 text-orange-500 p-2 rounded-md">
-                <MdErrorOutline className="w-5 h-5" />
-              </div>
-              <div>
-                <h4 className="font-semibold text-gray-800">Medium Priority</h4>
-                <p className="text-gray-500 text-sm">
-                  Health Worker alerted, doctor call in few hours
-                </p>
-              </div>
-            </div>
-            <div className="text-gray-800 font-medium mt-2 md:mt-0">300</div>
-          </div>
-
-          {/* Low Priority */}
-          <div className="flex items-start justify-between flex-wrap">
-            <div className="flex items-start space-x-3">
-              <div className="bg-green-100 text-green-500 p-2 rounded-md">
-                <BiMessageRoundedError className="w-5 h-5" />
-              </div>
-              <div>
-                <h4 className="font-semibold text-gray-800">Low Priority</h4>
-                <p className="text-gray-500 text-sm">
-                  Health worker notified, Advised via app
-                </p>
-              </div>
-            </div>
-            <div className="text-gray-800 font-medium mt-2 md:mt-0">900</div>
-          </div>
-        </div>
-      </div>
+      {/* Second Row - Risk Categorization and High Risk Mothers */}
+     
     </div>
   );
 };
 
-export default PregnancyRegistrationSection;
+export default ChartsSection;

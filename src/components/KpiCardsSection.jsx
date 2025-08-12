@@ -1,57 +1,74 @@
-import { BiMessageSquareDots } from "react-icons/bi";
-import { MdOutlineGridView } from "react-icons/md";
-import { RiUser3Line } from "react-icons/ri";
-import { GrDocumentText } from "react-icons/gr";
+import { FaArrowTrendDown } from "react-icons/fa6";
+import { FaArrowTrendUp } from "react-icons/fa6";
+import {
+  AncMothersIcon,
+  AppointmentIcon,
+  AppointTodayIcon,
+  BabiesIcon,
+  DeliveriesIcon,
+  HighRiskIcon,
+  NegativeIcon,
+  PositiveIcon,
+  TotalMotherIcon,
+  TotalUsersIcon,
+} from "./KpiCardIcons";
 const KpiCardsSection = () => {
   const stats = [
     {
-      title: "Total Users",
-      value: "50000",
-      icon: RiUser3Line,
-      color: "text-savemom-teal",
-      bgColor: "bg-kpi-bg",
+      title: "Total Mothers",
+      value: "1563",
+      icon: TotalMotherIcon,
+      change: "+11.3 %",
+      changeType: "positive",
     },
     {
-      title: "Total Roles",
-      value: "600",
-      icon: RiUser3Line,
-      color: "text-savemom-teal",
-      bgColor: "bg-kpi-bg",
+      title: "Total Deliveries",
+      value: "1469",
+      icon: TotalUsersIcon,
+      change: "-5.2 %",
+      changeType: "negative",
     },
     {
-      title: "Total Category",
-      value: "50000",
-      icon: MdOutlineGridView,
-      color: "text-savemom-teal",
-      bgColor: "bg-kpi-bg",
+      title: "ANC Mothers",
+      value: "38",
+      icon: AncMothersIcon,
+      change: "+5.2 %",
+      changeType: "positive",
     },
     {
-      title: "Total Content",
-      value: "600",
-      icon: GrDocumentText,
-      color: "text-savemom-teal",
-      bgColor: "bg-kpi-bg",
+      title: "Deliveries This Week",
+      value: "38",
+      icon: DeliveriesIcon,
+      change: "+5.2 %",
+      changeType: "positive",
     },
     {
-      title: "Total WhatsApp Messages",
-      value: "50000",
-      icon: BiMessageSquareDots,
-      color: "text-savemom-teal",
-      bgColor: "bg-kpi-bg",
+      title: "High Risk Mothers",
+      value: "653",
+      icon: HighRiskIcon,
+      change: "-12 %",
+      changeType: "negative",
     },
     {
-      title: "Total Email",
-      value: "600",
-      icon: BiMessageSquareDots,
-      color: "text-savemom-teal",
-      bgColor: "bg-kpi-bg",
+      title: "Premature Babies",
+      value: "38",
+      icon: BabiesIcon,
+      change: "+5.2 %",
+      changeType: "positive",
     },
     {
-      title: "Total Push Notification",
-      value: "50000",
-      icon: BiMessageSquareDots,
-      color: "text-savemom-teal",
-      bgColor: "bg-kpi-bg",
+      title: "Total Appointments",
+      value: "789",
+      icon: AppointmentIcon,
+      change: "+25.3 %",
+      changeType: "positive",
+    },
+    {
+      title: "Appointments Today",
+      value: "85",
+      icon: AppointTodayIcon,
+      change: "+25.3 %",
+      changeType: "positive",
     },
   ];
 
@@ -59,19 +76,28 @@ const KpiCardsSection = () => {
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
       {stats.map((stat, index) => (
         <div
-  key={index}
-  className="bg-white rounded-lg p-6 shadow-sm border border-gray-200 hover:scale-105 transition-transform duration-200"
->
-
+          key={index}
+          className="bg-white rounded-lg p-6 shadow-sm border border-gray-200 hover:scale-105 transition-transform duration-200"
+        >
           <div className="flex items-center justify-between">
             <div>
               <p className="text-lg font-medium text-gray-600 mb-1">
                 {stat.title}
               </p>
-              <p className="text-2xl font-bold text-gray-900 truncate">{stat.value}</p>
+              <p className="text-2xl font-bold text-gray-900 truncate">
+                {stat.value}
+              </p>
+               <div className="flex items-center space-x-1">
+              {stat.changeType === "positive" ? <PositiveIcon /> : <NegativeIcon />}
+              <span
+                className={`text-sm font-medium ${stat.changeType === "positive" ? "text-green-600" : "text-red-600"}`}
+              >
+                {stat.change}
+              </span>
             </div>
-            <div className={`p-3 rounded-lg ${stat.bgColor}`}>
-              <stat.icon className={`h-8 w-8 ${stat.color}`} />
+            </div>
+            <div className={`p-3 rounded-lg `}>
+              <stat.icon className={`h-8 w-8 `} />
             </div>
           </div>
         </div>
